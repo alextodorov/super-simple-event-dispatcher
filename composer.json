@@ -1,0 +1,32 @@
+{
+    "name": "ss/event-dispatcher",
+    "description": "Super Simple Event Dispatcher library implementing the PSR-14 standard.",
+    "type": "library",
+    "keywords": ["event dispatcher", "psr-14", "events"],
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Aleksandar Todorov",
+            "email": "aleksandr.todorov@gmail.com"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "SSEventDispatcher\\": "src"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "SSEventDispatcher\\UnitTest\\": "tests"
+        }
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true,
+    "require": {
+        "php": "^8.0",
+        "psr/event-dispatcher": ">=1.0.0"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^9"
+    }
+}
