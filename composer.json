@@ -1,5 +1,5 @@
 {
-    "name": "ss/event-dispatcher",
+    "name": "super-simple/event-dispatcher",
     "description": "Super Simple Event Dispatcher library implementing the PSR-14 standard.",
     "type": "library",
     "keywords": ["event dispatcher", "psr-14", "events"],
