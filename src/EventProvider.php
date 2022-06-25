@@ -7,6 +7,8 @@ namespace SSEventDispatcher;
 use Psr\EventDispatcher\ListenerProviderInterface;
 use Throwable;
 
+use function ksort;
+
 class EventProvider implements ListenerProviderInterface
 {
     private array $listeners = [];
