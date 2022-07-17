@@ -1,5 +1,4 @@
 # Super Simple Event Dispatcher
-===============================
 
 A super simple event dispatcher library implementing PSR-14
 
@@ -34,6 +33,6 @@ $dispatcher = new EventDispatcher($provider);
 $dispatcher->dispatch($event);
 ```
 
-For more details check [wiki] out.
+For more details check out the [wiki].
 
 [wiki]: https://github.com/alextodorov/super-simple-event-dispatcher/wiki/Basic-Usage
