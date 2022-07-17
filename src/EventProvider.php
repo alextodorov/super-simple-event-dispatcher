@@ -19,7 +19,7 @@ class EventProvider implements ListenerProviderInterface
      */
     public function getListenersForEvent(object $event): iterable
     {
-        foreach ($this->listeners[$event::class] as $priority => $data) {
+        foreach ($this->listeners[$event::class] as $data) {
             foreach ($data as $listener) {
                 yield $listener;
             }
