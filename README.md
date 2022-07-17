@@ -2,6 +2,8 @@
 
 A super simple event dispatcher library implementing PSR-14
 
+![Build Status](https://github.com/alextodorov/super-simple-event-dispatcher/actions/workflows/phpunit.yml/badge.svg?branch=main)
+
 Install
 -------
 
