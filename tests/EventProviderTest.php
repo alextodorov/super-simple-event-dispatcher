@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace SSEventDispatcher\UnitTest;
 
+use Generator;
 use PHPUnit\Framework\TestCase;
 use Psr\EventDispatcher\StoppableEventInterface;
 use SSEventDispatcher\EventProvider;
@@ -29,7 +30,12 @@ class EventProviderTest extends TestCase
 
         $provider->addListener($listener, stdClass::class, 2);
 
-        $this->assertCount(1, $provider->getListenersForEvent($event));
+        /** @var Generator $listeners */
+        $listeners = $provider->getListenersForEvent($event);
+        $this->assertTrue($listeners->valid());
+        $this->assertInstanceOf($listener::class, $listeners->current());
+        $listeners->next();
+        $this->assertFalse($listeners->valid());
     }
 
     public function testAddGetListenerViaSubscriber()
@@ -58,7 +64,14 @@ class EventProviderTest extends TestCase
 
         $provider->addSubsciber($subscriber);
 
-        $this->assertCount(2, $provider->getListenersForEvent($event));
+        /** @var Generator $listeners */
+        $listeners = $provider->getListenersForEvent($event);
+        $this->assertTrue($listeners->valid());
+        $this->assertIsCallable($listeners->current());
+        $listeners->next();
+        $this->assertIsCallable($listeners->current());
+        $listeners->next();
+        $this->assertFalse($listeners->valid());
     }
 
     public function testInvalidSubscriber()
