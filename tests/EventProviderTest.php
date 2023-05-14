@@ -97,7 +97,7 @@ class EventProviderTest extends TestCase
         }
 
         $this->expectException(InvalidSubscriber::class);
-        $this->expectErrorMessage('Please provide a valid subscriber. The Array with keys listener, name, priority');
+        $this->expectExceptionMessage('Please provide a valid subscriber. The Array with keys listener, name, priority');
   
         $provider->addSubsciber($subscriber);
     }

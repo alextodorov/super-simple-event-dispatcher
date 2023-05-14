@@ -37,7 +37,7 @@ class EventProvider implements ListenerProviderInterface
     {
         try {
             foreach ($subscriber->getSubscribeEvents() as $data) {
-                $this->addListener($data['listener'], $data['name'], $data['priority']);
+                $this->addListener($data['listener'] ?? null, $data['name'] ?? null, $data['priority'] ?? null);
             }
         } catch (Throwable) {
             throw new InvalidSubscriber(
