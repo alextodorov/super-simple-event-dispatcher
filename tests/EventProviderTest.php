@@ -10,6 +10,7 @@ use SSEventDispatcher\EventProvider;
 use SSEventDispatcher\EventSubscriberInterface;
 use SSEventDispatcher\InvalidSubscriber;
 use stdClass;
+use Iterator;
 
 class EventProviderTest extends TestCase
 {
@@ -127,6 +128,7 @@ class EventProviderTest extends TestCase
             2
         );
 
+        /** @var Iterator $gen */
         $gen = $provider->getListenersForEvent($event);
 
         $this->assertInstanceOf($first::class, $gen->current());

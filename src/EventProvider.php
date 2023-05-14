@@ -39,7 +39,7 @@ class EventProvider implements ListenerProviderInterface
             foreach ($subscriber->getSubscribeEvents() as $data) {
                 $this->addListener($data['listener'], $data['name'], $data['priority']);
             }
-        } catch (Throwable $e) {
+        } catch (Throwable) {
             throw new InvalidSubscriber(
                 'Please provide a valid subscriber. The Array with keys listener, name, priority'
             );

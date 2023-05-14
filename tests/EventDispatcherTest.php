@@ -11,7 +11,6 @@ use Psr\EventDispatcher\ListenerProviderInterface;
 use Psr\EventDispatcher\StoppableEventInterface;
 use SSEventDispatcher\EventDispatcher;
 use SSEventDispatcher\EventProvider;
-use stdClass;
 
 class EventDispatcherTest extends TestCase
 {
@@ -86,6 +85,7 @@ class EventDispatcherTest extends TestCase
 
     private function getProvider(object $event, array $listener): MockObject|ListenerProviderInterface
     {
+        /** @var MockObject $provider */
         $provider = $this->createMock(EventProvider::class);
 
         $provider
