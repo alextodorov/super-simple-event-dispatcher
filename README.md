@@ -2,7 +2,7 @@
 
 A super simple event dispatcher library implementing PSR-14
 
-![Build Status](https://github.com/alextodorov/super-simple-event-dispatcher/actions/workflows/phpunit.yml/badge.svg?branch=main)[![Latest Stable Version](http://poser.pugx.org/super-simple/event-dispatcher/v)](https://packagist.org/packages/super-simple/event-dispatcher)[![PHP Version Require](http://poser.pugx.org/super-simple/event-dispatcher/require/php)](https://packagist.org/packages/super-simple/event-dispatcher)[![License](http://poser.pugx.org/super-simple/event-dispatcher/license)](https://packagist.org/packages/super-simple/event-dispatcher)
+![Build Status](https://github.com/alextodorov/super-simple-event-dispatcher/actions/workflows/phpunit.yml/badge.svg?branch=main) [![Latest Stable Version](http://poser.pugx.org/super-simple/event-dispatcher/v)](https://packagist.org/packages/super-simple/event-dispatcher) [![PHP Version Require](http://poser.pugx.org/super-simple/event-dispatcher/require/php)](https://packagist.org/packages/super-simple/event-dispatcher) [![License](http://poser.pugx.org/super-simple/event-dispatcher/license)](https://packagist.org/packages/super-simple/event-dispatcher) [![Total Downloads](http://poser.pugx.org/super-simple/event-dispatcher/downloads)](https://packagist.org/packages/super-simple/event-dispatcher)
 
 Install
 -------
