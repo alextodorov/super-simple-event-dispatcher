@@ -10,12 +10,16 @@
   cacheDirectory=".phpunit.cache/code-coverage"
   requireCoverageMetadata="false"
   beStrictAboutCoverageMetadata="true">
+  <coverage>
+    <report>
+      <clover outputFile="clover.xml"/>
+    </report>
+  </coverage>
   <testsuites>
     <testsuite name="unit">
       <directory suffix="Test.php">tests</directory>
     </testsuite>
   </testsuites>
-  <coverage/>
   <source>
     <include>
       <directory suffix=".php">src</directory>
