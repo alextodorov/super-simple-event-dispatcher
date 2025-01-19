@@ -35,3 +35,5 @@ jobs:
         with:
           files: ./clover.xml
           verbose: true
+        env:
+          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
