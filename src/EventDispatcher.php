@@ -16,9 +16,6 @@ class EventDispatcher implements EventDispatcherInterface
         $this->provider = $provider;
     }
 
-    /**
-     * @inheritdoc
-     */
     public function dispatch(object $event)
     {
         if ($event->isPropagationStopped()) {

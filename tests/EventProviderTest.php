@@ -6,148 +6,107 @@ namespace SSEventDispatcher\UnitTest;
 
 use Generator;
 use PHPUnit\Framework\TestCase;
-use Psr\EventDispatcher\StoppableEventInterface;
+use PHPUnit\Framework\MockObject\MockObject;
 use SSEventDispatcher\EventProvider;
-use SSEventDispatcher\EventSubscriberInterface;
-use SSEventDispatcher\InvalidSubscriber;
+use SSEventDispatcher\EventListener;
 use stdClass;
-use Iterator;
 
 class EventProviderTest extends TestCase
 {
-    public function testAddGetListener()
-    {
-        $provider = new EventProvider();
+    private EventProvider $provider;
 
+    protected function setUp(): void
+    {
+        $this->provider = new EventProvider();
+    }
+
+    public function testAddGetListener(): void
+    {
         $event = new stdClass();
 
-        $listener = new class {
-            public function __invoke(object $event)
-            {
-                $event->weight = 2;
-            }   
-        };
+        /** @var MockObject|EventListener $listener */
+        $listener = $this->getListener(fn(object $event) => $event->weight = 2, 1);
 
-        $provider->addListener($listener, stdClass::class, 2);
+        $this->provider->addListener($listener);
 
         /** @var Generator $listeners */
-        $listeners = $provider->getListenersForEvent($event);
+        $listeners = $this->provider->getListenersForEvent($event);
+
         $this->assertTrue($listeners->valid());
-        $this->assertInstanceOf($listener::class, $listeners->current());
+
+        $this->assertIsCallable($listeners->current());
+        
+        $listeners->current()($event);
+
         $listeners->next();
+
+        $this->assertFalse($listeners->valid());
+        $this->assertEquals(2, $event->weight);
+    }
+
+    public function testListenersOrder(): void
+    {
+        $event = new stdClass();
+
+        /** @var MockObject|EventListener $listener */
+        $listener = $this->getListener(fn(object $event) => $event->weight = 2, 2);
+
+        $this->provider->addListener($listener);
+        
+        /** @var MockObject|EventListener $listener */
+        $listener2 = $this->getListener(fn(object $event) => $event->weight = 3, 1);
+
+        $this->provider->addListener($listener2);
+
+        /** @var Generator $listeners */
+        $listeners = $this->provider->getListenersForEvent($event);
+
+        $this->assertTrue($listeners->valid());
+        $this->assertIsCallable($listeners->current());
+
+        $listeners->current()($event);
+        $this->assertEquals(3, $event->weight);
+
+        $listeners->next();
+        
+        $this->assertIsCallable($listeners->current());
+
+        $listeners->current()($event);
+        $this->assertEquals(2, $event->weight);
+        
+        $listeners->next();
+        
         $this->assertFalse($listeners->valid());
     }
 
-    public function testAddGetListenerViaSubscriber()
+    public function testListenerNotFound(): void
     {
-        $provider = new EventProvider();
-
         $event = new stdClass();
+        $result = $this->provider->getListenersForEvent($event);
 
-        $subscriber = new class implements EventSubscriberInterface {
-            public function getSubscribeEvents(): iterable
-            {
-                return [
-                    [
-                        'name' => stdClass::class,
-                        'listener' => function (object $event) {},
-                        'priority' => 2,
-                    ],
-                    [
-                        'name' => stdClass::class,
-                        'listener' => function (object $event) {},
-                        'priority' => 1,
-                    ]
-                ];
-            }   
-        };
-
-        $provider->addSubsciber($subscriber);
-
-        /** @var Generator $listeners */
-        $listeners = $provider->getListenersForEvent($event);
-        $this->assertTrue($listeners->valid());
-        $this->assertIsCallable($listeners->current());
-        $listeners->next();
-        $this->assertIsCallable($listeners->current());
-        $listeners->next();
-        $this->assertFalse($listeners->valid());
+        $this->assertFalse($result->valid());
     }
 
-    public function testInvalidSubscriber()
+    private function getListener(callable $callable, int $order): MockObject|EventListener
     {
-        $provider = new EventProvider();
+        /** @var MockObject|EventListener $listener */
+        $listener = $this->createMock(EventListener::class);
 
-        $subscriber = new class implements EventSubscriberInterface {
-            public function getSubscribeEvents(): iterable
-            {
-                return [
-                    [],
-                ];
-            }   
-        };
-                
-        try {
-            $provider->addSubsciber($subscriber);
-        } catch (\Throwable $e) {
-            $this->assertEquals(
-                "SSEventDispatcher\InvalidSubscriber: [0]: Please provide a valid subscriber. The Array with keys listener, name, priority\n",
-                "$e"
-            );
-        }
+        $listener
+            ->expects($this->once())
+            ->method('getName')
+            ->willReturn(stdClass::class);
 
-        $this->expectException(InvalidSubscriber::class);
-        $this->expectExceptionMessage('Please provide a valid subscriber. The Array with keys listener, name, priority');
-  
-        $provider->addSubsciber($subscriber);
-    }
+        $listener
+            ->expects($this->once())
+            ->method('getPriority')
+            ->willReturn($order);
 
-    public function testListenerOrder()
-    {
-        $provider = new EventProvider();
-
-        $event = new class implements StoppableEventInterface {
-            private bool $stoppable = false;
-
-            public function isPropagationStopped(): bool
-            {
-                return $this->stoppable;
-            }
-        };
-        
-        $second = new class {
-            public function __invoke(object $event)
-            {
-                
-            }      
-        };
-
-        $first = new class {
-            public function __invoke(object $event)
-            {
-                
-            }      
-        };
-
-        $provider->addListener(
-            $second,
-            $event::class,
-            3
-        );
-        
-        $provider->addListener(
-            $first,
-            $event::class,
-            2
-        );
-
-        /** @var Iterator $gen */
-        $gen = $provider->getListenersForEvent($event);
-
-        $this->assertInstanceOf($first::class, $gen->current());
-
-        $gen->next();
-
-        $this->assertInstanceOf($second::class, $gen->current());
+        $listener
+            ->expects($this->once())
+            ->method('getCallable')
+            ->willReturn($callable);
+   
+        return $listener;
     }
 }

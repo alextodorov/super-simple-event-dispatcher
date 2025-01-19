@@ -7,7 +7,7 @@ namespace SSEventDispatcher;
 use Exception;
 use Throwable;
 
-class InvalidSubscriber extends Exception
+class InvalidListener extends Exception
 {
     public function __construct($message, $code = 0, Throwable $previous = null)
     {

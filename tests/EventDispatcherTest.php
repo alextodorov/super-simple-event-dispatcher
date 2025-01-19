@@ -6,7 +6,6 @@ namespace SSEventDispatcher\UnitTest;
 
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
-use Psr\EventDispatcher\EventDispatcherInterface;
 use Psr\EventDispatcher\ListenerProviderInterface;
 use Psr\EventDispatcher\StoppableEventInterface;
 use SSEventDispatcher\EventDispatcher;
@@ -14,7 +13,7 @@ use SSEventDispatcher\EventProvider;
 
 class EventDispatcherTest extends TestCase
 {
-    public function testDispatch()
+    public function testDispatch(): void
     {
         $event = new class implements StoppableEventInterface {
             private bool $stoppable = false;
@@ -36,12 +35,10 @@ class EventDispatcherTest extends TestCase
 
         $dispatcher = new EventDispatcher($provider);
 
-        $this->assertInstanceOf(EventDispatcherInterface::class, $dispatcher);
-
         $this->assertInstanceOf(StoppableEventInterface::class, $dispatcher->dispatch($event));
     }
 
-    public function testStoppableEvent()
+    public function testStoppableEvent(): void
     {
         $event = new class implements StoppableEventInterface {
             private bool $stoppable = false;

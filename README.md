@@ -25,8 +25,11 @@ require '/path/to/vendor/autoload.php';
 $provider = new EventProvider();
 
 // Register listener
+$listener = new EventListener();
+$listener->setName(Event::class);
+$listener->setCallable(fn($event) => $event);
 
-$provider->addListener($listener, $eventName, $priority);
+$provider->addListener($listener);
 
 // New dispatcher
 $dispatcher = new EventDispatcher($provider);

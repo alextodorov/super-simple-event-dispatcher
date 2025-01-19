@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace SSEventDispatcher;
 
 use Psr\EventDispatcher\ListenerProviderInterface;
-use Throwable;
 
 use function ksort;
 
@@ -13,12 +12,13 @@ class EventProvider implements ListenerProviderInterface
 {
     private array $listeners = [];
 
-    /**
-     * @param  object $event
-     * @return iterable[callable]
-     */
     public function getListenersForEvent(object $event): iterable
     {
+        if (!isset($this->listeners[$event::class])) {
+            return [];
+        }
+        
+        ksort($this->listeners[$event::class]);
         foreach ($this->listeners[$event::class] as $data) {
             foreach ($data as $listener) {
                 yield $listener;
@@ -26,23 +26,8 @@ class EventProvider implements ListenerProviderInterface
         }
     }
 
-    public function addListener(object | callable $listener, string $name, int $priority = 1)
+    public function addListener(EventListenerable $listener): void
     {
-        $this->listeners[$name][$priority][] = $listener;
-
-        ksort($this->listeners[$name]);
-    }
-
-    public function addSubsciber(EventSubscriberInterface $subscriber)
-    {
-        try {
-            foreach ($subscriber->getSubscribeEvents() as $data) {
-                $this->addListener($data['listener'] ?? null, $data['name'] ?? null, $data['priority'] ?? null);
-            }
-        } catch (Throwable) {
-            throw new InvalidSubscriber(
-                'Please provide a valid subscriber. The Array with keys listener, name, priority'
-            );
-        }
+        $this->listeners[$listener->getName()][$listener->getPriority()][] = $listener->getCallable();
     }
 }
