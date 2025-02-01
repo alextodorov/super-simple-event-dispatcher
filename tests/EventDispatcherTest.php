@@ -6,91 +6,78 @@ namespace SSEventDispatcher\UnitTest;
 
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
-use Psr\EventDispatcher\ListenerProviderInterface;
-use Psr\EventDispatcher\StoppableEventInterface;
 use SSEventDispatcher\EventDispatcher;
 use SSEventDispatcher\EventProvider;
 
 class EventDispatcherTest extends TestCase
 {
-    public function testDispatch(): void
+    private EventDispatcher $dispatcher;
+    private EventTester $event;
+    private MockObject|EventProvider $provider;
+
+    protected function setUp(): void
     {
-        $event = new class implements StoppableEventInterface {
-            private bool $stoppable = false;
+        $this->event = new EventTester();
+        $this->provider = $this->createMock(EventProvider::class);
+        $this->dispatcher = new EventDispatcher($this->provider);
+    }
 
-            public function isPropagationStopped(): bool
-            {
-                return $this->stoppable;
-            }
-        };
-
-        $provider = $this->getProvider(
-            $event,
-            [ 
+    public function testDispatchFunction(): void
+    {
+        $this->setUpProviderListeners(
+            [
                 function (object $event) {
-                    return $event;
+                    $event->increment();
                 }
             ]
         );
 
-        $dispatcher = new EventDispatcher($provider);
-
-        $this->assertInstanceOf(StoppableEventInterface::class, $dispatcher->dispatch($event));
+        $this->dispatcher->dispatch($this->event);
+        $this->assertEquals(1, $this->event->getCount());
     }
 
-    public function testStoppableEvent(): void
+    public function testDispatchObject(): void
     {
-        $event = new class implements StoppableEventInterface {
-            private bool $stoppable = false;
-            
-            public int $count = 0;
-
-            public function isPropagationStopped(): bool
-            {
-                return $this->stoppable;
-            }
-
-            public function stopPropagation(): void
-            {
-                $this->stoppable = true;
+        $object = new class {
+            public function __invoke(object $event) {
+                $event->increment();
             }
         };
 
-        $provider = $this->getProvider(
-            $event,
-            [ 
+        $this->setUpProviderListeners([$object]);
+
+        $this->dispatcher->dispatch($this->event);
+        $this->assertEquals(1, $this->event->getCount());
+    }
+
+    public function testPropagationStopped(): void
+    {
+        $this->setUpProviderListeners(
+            [
                 function (object $event) {
+                    $event->increment();
                     $event->stopPropagation();
-
-                    $event->count++;
-
-                    return $event;
+                }
+            ],
+            [
+                function (object $event) {
+                    $event->increment();
                 }
             ]
         );
 
-        $dispatcher = new EventDispatcher($provider);
+        $this->dispatcher->dispatch($this->event);
+        $this->dispatcher->dispatch($this->event);
 
-        $dispatcher->dispatch($event);
-
-        $this->assertEquals(1, $event->count);
-
-        $dispatcher->dispatch($event);
-
-        $this->assertEquals(1, $event->count);
+        $this->assertEquals(1, $this->event->getCount());
     }
 
-    private function getProvider(object $event, array $listener): MockObject|ListenerProviderInterface
+    private function setUpProviderListeners(array $listenerConfig): void
     {
-        /** @var MockObject $provider */
-        $provider = $this->createMock(EventProvider::class);
-
-        $provider
+        $this->provider
             ->expects($this->once())
             ->method('getListenersForEvent')
-            ->with($event)
-            ->willReturn($listener);
-
-        return $provider;
+            ->with($this->event)
+            ->willReturn($listenerConfig);
     }
 }

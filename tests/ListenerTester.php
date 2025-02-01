@@ -2,9 +2,11 @@
 
 declare(strict_types=1);
 
-namespace SSEventDispatcher;
+namespace SSEventDispatcher\UnitTest;
 
-class EventListener implements EventListenerable
+use SSEventDispatcher\EventListenerable;
+
+class ListenerTester implements EventListenerable
 {
     private string $name;
 
@@ -40,14 +42,5 @@ class EventListener implements EventListenerable
     public function getCallable(): callable
     {
         return $this->callable;
-    }
-
-    public function validate(): void
-    {
-        if (isset($this->name) && isset($this->callable)) {
-            return;
-        }
-
-        throw new InvalidListener('Please provide a valid listener. The listener must have set: name and callable');
     }
 }

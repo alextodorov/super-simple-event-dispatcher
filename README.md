@@ -11,7 +11,7 @@ Install
 composer require super-simple/event-dispatcher
 ```
 
-Requires PHP 8.1 or newer.
+Requires PHP 8.4 or newer.
 
 Usage
 -----
@@ -24,10 +24,8 @@ require '/path/to/vendor/autoload.php';
 // New provider
 $provider = new EventProvider();
 
-// Register listener
-$listener = new EventListener();
-$listener->setName(Event::class);
-$listener->setCallable(fn($event) => $event);
+// MyListener class must implement EventListenerable
+$listener = new MyListener();
 
 $provider->addListener($listener);
 
@@ -35,9 +33,8 @@ $provider->addListener($listener);
 $dispatcher = new EventDispatcher($provider);
 
 // Dispatch the event
+// Event class must implement Psr/EventDispatcher/StoppableEventInterface
+$event = new Event();
+
 $dispatcher->dispatch($event);
 ```
-
-For more details check out the [wiki].
-
-[wiki]: https://github.com/alextodorov/super-simple-event-dispatcher/wiki/Basic-Usage

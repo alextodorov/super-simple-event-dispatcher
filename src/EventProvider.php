@@ -19,8 +19,8 @@ class EventProvider implements ListenerProviderInterface
         }
         
         ksort($this->listeners[$event::class]);
-        foreach ($this->listeners[$event::class] as $data) {
-            foreach ($data as $listener) {
+        foreach ($this->listeners[$event::class] as $eventListeners) {
+            foreach ($eventListeners as $listener) {
                 yield $listener;
             }
         }

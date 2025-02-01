@@ -7,6 +7,8 @@ namespace SSEventDispatcher;
 use Psr\EventDispatcher\EventDispatcherInterface;
 use Psr\EventDispatcher\ListenerProviderInterface;
 
+use function call_user_func;
+
 class EventDispatcher implements EventDispatcherInterface
 {
     private ListenerProviderInterface $provider;
@@ -23,7 +25,7 @@ class EventDispatcher implements EventDispatcherInterface
         }
 
         foreach ($this->provider->getListenersForEvent($event) as $listener) {
-            $listener($event);
+            call_user_func($listener, $event);
 
             if ($event->isPropagationStopped()) {
                 break;
