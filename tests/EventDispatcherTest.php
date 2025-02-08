@@ -24,7 +24,7 @@ class EventDispatcherTest extends TestCase
 
     public function testDispatchFunction(): void
     {
-        $this->setUpProviderListeners(
+        $this->setUpProvider(
             [
                 function (object $event) {
                     $event->increment();
@@ -39,12 +39,13 @@ class EventDispatcherTest extends TestCase
     public function testDispatchObject(): void
     {
         $object = new class {
-            public function __invoke(object $event) {
+            public function __invoke(object $event)
+            {
                 $event->increment();
             }
         };
 
-        $this->setUpProviderListeners([$object]);
+        $this->setUpProvider([$object]);
 
         $this->dispatcher->dispatch($this->event);
         $this->assertEquals(1, $this->event->getCount());
@@ -52,7 +53,7 @@ class EventDispatcherTest extends TestCase
 
     public function testPropagationStopped(): void
     {
-        $this->setUpProviderListeners(
+        $this->setUpProvider(
             [
                 function (object $event) {
                     $event->increment();
@@ -72,7 +73,7 @@ class EventDispatcherTest extends TestCase
         $this->assertEquals(1, $this->event->getCount());
     }
 
-    private function setUpProviderListeners(array $listenerConfig): void
+    private function setUpProvider(array $listenerConfig): void
     {
         $this->provider
             ->expects($this->once())

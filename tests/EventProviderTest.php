@@ -30,7 +30,7 @@ class EventProviderTest extends TestCase
 
         /** @var Generator $listeners */
         $listeners = $this->provider->getListenersForEvent($this->event);
-        
+
         $listeners->current()($this->event);
 
         $listeners->next();
@@ -45,7 +45,7 @@ class EventProviderTest extends TestCase
         $listener = $this->getListener(fn(object $event) => $event->weight = 2, 2);
 
         $this->provider->addListener($listener);
-        
+
         /** @var MockObject|ListenerTester $listener */
         $listener2 = $this->getListener(fn(object $event) => $event->weight = 3, 1);
 
@@ -60,9 +60,9 @@ class EventProviderTest extends TestCase
         $listeners->next();
         $listeners->current()($this->event);
         $this->assertEquals(2, $this->event->weight);
-        
+
         $listeners->next();
-        
+
         $this->assertFalse($listeners->valid());
     }
 
@@ -92,7 +92,7 @@ class EventProviderTest extends TestCase
             ->expects($this->once())
             ->method('getCallable')
             ->willReturn($callable);
-   
+
         return $listener;
     }
 }

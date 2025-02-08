@@ -22,12 +22,12 @@ class ListenerTester implements EventListenerable
 
     private int $priority = 1;
 
-    public function setPriority(int $priority = 1): void 
+    public function setPriority(int $priority = 1): void
     {
         $this->priority = $priority;
     }
 
-    public function getPriority(): int 
+    public function getPriority(): int
     {
         return $this->priority;
     }
