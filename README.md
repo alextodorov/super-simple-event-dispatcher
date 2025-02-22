@@ -2,7 +2,7 @@
 
 A super simple event dispatcher library implementing PSR-14
 
-![Build Status](https://github.com/alextodorov/super-simple-event-dispatcher/actions/workflows/phpunit.yml/badge.svg?branch=main) [![codecov](https://codecov.io/gh/alextodorov/super-simple-event-dispatcher/branch/main/graph/badge.svg?token=RO512GTO4W)](https://codecov.io/gh/alextodorov/super-simple-event-dispatcher) 
+![Build Status](https://github.com/alextodorov/super-simple-event-dispatcher/actions/workflows/build.yml/badge.svg?branch=main) [![codecov](https://codecov.io/gh/alextodorov/super-simple-event-dispatcher/branch/main/graph/badge.svg?token=RO512GTO4W)](https://codecov.io/gh/alextodorov/super-simple-event-dispatcher) 
 
 Install
 -------
